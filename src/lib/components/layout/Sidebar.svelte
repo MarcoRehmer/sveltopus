@@ -1,50 +1,38 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import LayoutDashboard from '@lucide/svelte/icons/layout-dashboard';
-	import Inbox from '@lucide/svelte/icons/inbox';
-	import FileText from '@lucide/svelte/icons/file-text';
-
 	import * as SidebarPrimitive from '$lib/components/ui/sidebar';
-	import SidebarFooter from '../ui/sidebar/sidebar-footer.svelte';
-
-	const navItems = [
-		{
-			name: 'Dashboard',
-			path: '/dashboard',
-			href: '/dashboard',
-			icon: LayoutDashboard,
-		},
-		{
-			name: 'Packing Table',
-			path: '/packing-table',
-			href: '/packing-table',
-			icon: Inbox,
-		},
-		{
-			name: 'Orders',
-			path: '/orders',
-			href: '/orders',
-			icon: FileText,
-		},
-	] as const;
+	import { resolve } from '$app/paths';
+	import { navigationItems } from './navigation';
 
 	function isActive(href: string) {
-		return page.url.pathname.startsWith(href);
+		const pathname = page.url.pathname;
+
+		if (href === '/dashboard') {
+			return pathname === href;
+		}
+
+		return pathname === href || pathname.startsWith(`${href}/`);
 	}
 </script>
 
-<SidebarPrimitive.Root collapsible="none">
+<SidebarPrimitive.Root>
+	<SidebarPrimitive.Header class="border-b border-sidebar-border">
+		<span class="px-2 text-xs font-semibold uppercase tracking-wider text-sidebar-foreground/60">
+			Workspace
+		</span>
+	</SidebarPrimitive.Header>
+
 	<SidebarPrimitive.Content>
 		<SidebarPrimitive.Group>
 			<SidebarPrimitive.GroupContent>
 				<SidebarPrimitive.Menu>
-					{#each navItems as item (item.path)}
+					{#each navigationItems as item (item.href)}
 						<SidebarPrimitive.MenuItem>
-							<SidebarPrimitive.MenuButton isActive={isActive(item.path)}>
+							<SidebarPrimitive.MenuButton isActive={isActive(item.href)}>
 								{#snippet child({ props })}
-									<a href={item.href} {...props}>
+									<a href={resolve(item.href)} {...props}>
 										<item.icon />
-										<span>{item.name}</span>
+										<span>{item.label}</span>
 									</a>
 								{/snippet}
 							</SidebarPrimitive.MenuButton>
@@ -54,7 +42,4 @@
 			</SidebarPrimitive.GroupContent>
 		</SidebarPrimitive.Group>
 	</SidebarPrimitive.Content>
-	<SidebarFooter>
-		Foo
-	</SidebarFooter>
 </SidebarPrimitive.Root>

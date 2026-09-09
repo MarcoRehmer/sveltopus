@@ -14,7 +14,8 @@
 		"format": "prettier --write .",
 		"test:unit": "vitest",
 		"test": "npm run test:unit -- --run",
-		"contract:emit": "prisma contract emit"
+		"contract:emit": "prisma contract emit",
+		"db:seed": "bun run src/scripts/seed-local-db.ts"
 	},
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",

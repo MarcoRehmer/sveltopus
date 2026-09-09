@@ -1,31 +1,18 @@
-## Project Configuration
+# Sveltopus
 
-- **Language**: TypeScript
-- **Package Manager**: bun
-- **Add-ons**: prettier, eslint, vitest, tailwindcss, sveltekit-adapter, paraglide, ai-tools
+## Commands
 
----
+- Use Bun: `bun run dev`, `bun run build`, `bun run check`, `bun run lint`, and `bun run test` (single run). `lint` runs Prettier validation before ESLint; use `bun run format` to fix formatting.
+- Run focused tests with `bun run test -- --project client` or `bun run test -- --project server`. Svelte component tests run in headless Chromium; all other `src` tests run in Node.
 
-You are able to use the Svelte MCP server, where you have access to comprehensive Svelte 5 and SvelteKit documentation. Here's how to use the available tools effectively:
+## Application and Data
 
-## Available Svelte MCP Tools:
+- This is a single SvelteKit application. `src/routes/(auth)` owns login/sign-up, and `src/routes/(app)` is the authenticated application shell; server layout guards redirect between them.
+- The project forces Svelte runes mode for application files. For any `.svelte` or `.svelte.ts` change, use the Svelte MCP documentation and run the Svelte autofixer until it is clean.
+- PostgreSQL 15+ and `DATABASE_URL` in `.env` are required for database-backed work. `compose.yml` provides the local database (`root` / `mysecretpassword`, database `local`, port `5432`).
+- `src/prisma/contract.prisma` is the database source of truth. After changing it, run `bun run contract:emit`; commit the resulting `src/prisma/contract.json` and `src/prisma/contract.d.ts` even though they are generated. Initialize tables with `bun prisma db init` when needed.
+- Paraglide messages live in `messages/en.json` and `messages/de.json`; do not edit generated `src/lib/paraglide/`.
 
-### 1. list-sections
+## Task Files
 
-Use this FIRST to discover all available documentation sections. Returns a structured list with titles, use_cases, and paths.
-When asked about Svelte or SvelteKit topics, ALWAYS use this tool at the start of the chat to find relevant sections.
-
-### 2. get-documentation
-
-Retrieves full documentation content for specific sections. Accepts single or multiple sections.
-After calling the list-sections tool, you MUST analyze the returned documentation sections (especially the use_cases field) and then use the get-documentation tool to fetch ALL documentation sections that are relevant for the user's task.
-
-### 3. svelte-autofixer
-
-Analyzes Svelte code and returns issues and suggestions.
-You MUST use this tool whenever writing Svelte code before sending it to the user. Keep calling it until no issues or suggestions are returned.
-
-### 4. playground-link
-
-Generates a Svelte Playground link with the provided code.
-After completing the code, ask the user if they want a playground link. Only call this tool after user confirmation and NEVER if code was written to files in their project.
+- Agent-authored feature tasks live in `tasks/` and follow `tasks/feature-template.md`. Use only `new`, `approved`, `in_progress`, or `rejected` for task status; `rejected` requires a reason.
