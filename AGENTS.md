@@ -9,8 +9,6 @@
 
 - This is a single SvelteKit application. `src/routes/(auth)` owns login/sign-up, and `src/routes/(app)` is the authenticated application shell; server layout guards redirect between them.
 - The project forces Svelte runes mode for application files. For any `.svelte` or `.svelte.ts` change, use the Svelte MCP documentation and run the Svelte autofixer until it is clean.
-- PostgreSQL 15+ and `DATABASE_URL` in `.env` are required for database-backed work. `compose.yml` provides the local database (`root` / `mysecretpassword`, database `local`, port `5432`).
-- `src/prisma/contract.prisma` is the database source of truth. After changing it, run `bun run contract:emit`; commit the resulting `src/prisma/contract.json` and `src/prisma/contract.d.ts` even though they are generated. Initialize tables with `bun prisma db init` when needed.
 - Paraglide messages live in `messages/en.json` and `messages/de.json`; do not edit generated `src/lib/paraglide/`.
 
 ## Task Files
