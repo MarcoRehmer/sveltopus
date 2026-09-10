@@ -12,19 +12,6 @@
 	let { children }: { children: Snippet } = $props();
 </script>
 
-<!-- <SidebarPrimitive.Provider class="min-h-svh">
-	<Sidebar />
-
-	<SidebarPrimitive.Inset class="min-h-svh min-w-0">
-		
-
-		<main class="min-h-0 flex-1 overflow-y-auto p-6 md:p-8">
-			{@render children()}
-		</main>
-	</SidebarPrimitive.Inset>
-</SidebarPrimitive.Provider> -->
-
-
 <Sidebar.Provider>
 	<AppSidebar />
 	<Sidebar.Inset>
