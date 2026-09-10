@@ -72,8 +72,12 @@
 						{/snippet}
 					</DropdownMenu.Item>
 					<DropdownMenu.Item>
-						<CreditCardIcon />
-						Billing
+						{#snippet child({ props })}
+							<a href="/account/subscriptions" {...props}>
+								<CreditCardIcon />
+								Billing
+							</a>
+						{/snippet}
 					</DropdownMenu.Item>
 					<DropdownMenu.Item>
 						<BellIcon />

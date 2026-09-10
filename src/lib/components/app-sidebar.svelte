@@ -106,7 +106,7 @@
 					},
 					{
 						title: 'Billing',
-						url: '#'
+						url: '/account/subscriptions'
 					},
 					{
 						title: 'Limits',
