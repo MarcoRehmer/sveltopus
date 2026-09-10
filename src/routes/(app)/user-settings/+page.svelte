@@ -45,4 +45,16 @@
 			</div>
 		</Card.Content>
 	</Card.Root>
+
+	<Card.Root class="max-w-2xl border-destructive/40">
+		<Card.Header>
+			<Card.Title class="text-destructive">Danger Zone</Card.Title>
+			<Card.Description>
+				Permanently delete your account and all associated data. This action cannot be undone.
+			</Card.Description>
+		</Card.Header>
+		<Card.Footer class="justify-end">
+			<Button variant="destructive" type="button" disabled>Delete account</Button>
+		</Card.Footer>
+	</Card.Root>
 </div>
