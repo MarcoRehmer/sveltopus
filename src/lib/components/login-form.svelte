@@ -1,10 +1,19 @@
 <script lang="ts">
-	import * as Card from "$lib/components/ui/card/index.js";
-	import { Button } from "$lib/components/ui/button/index.js";
-	import { FieldGroup, Field, FieldLabel, FieldDescription } from "$lib/components/ui/field/index.js";
-	import { Input } from "$lib/components/ui/input/index.js";
-	import { resolve } from "$app/paths";
+	import * as Card from '$lib/components/ui/card/index.js';
+	import { Button } from '$lib/components/ui/button/index.js';
+	import {
+		FieldGroup,
+		Field,
+		FieldLabel,
+		FieldDescription
+	} from '$lib/components/ui/field/index.js';
+	import { Input } from '$lib/components/ui/input/index.js';
+	import { resolve } from '$app/paths';
+	import type { Pathname } from '$app/types';
+	import { enhance } from '$app/forms';
 
+	let { redirectTo = '/', form }: { redirectTo?: string; form?: { message?: string } | null } =
+		$props();
 	const id = $props.id();
 </script>
 
@@ -14,18 +23,19 @@
 		<Card.Description>Enter your email below to login to your account</Card.Description>
 	</Card.Header>
 	<Card.Content>
-		<form>
+		<form method="post" action="?/signInEmail" use:enhance>
+			<input type="hidden" name="redirectTo" value={redirectTo} />
 			<FieldGroup>
 				<Field>
 					<FieldLabel for="email-{id}">Email</FieldLabel>
-					<Input id="email-{id}" type="email" placeholder="m@example.com" required />
+					<Input id="email-{id}" name="email" type="email" placeholder="m@example.com" required />
 				</Field>
 				<Field>
 					<div class="flex items-center">
 						<FieldLabel for="password-{id}">Password</FieldLabel>
 						<a href="##" class="ms-auto inline-block text-sm underline"> Forgot your password? </a>
 					</div>
-					<Input id="password-{id}" type="password" required />
+					<Input id="password-{id}" name="password" type="password" required />
 				</Field>
 				<Field>
 					<Button type="submit" class="w-full">Login</Button>
@@ -38,8 +48,14 @@
 						</svg>
 						Login with Google
 					</Button>
+					{#if form?.message}
+						<FieldDescription class="text-center text-destructive">{form.message}</FieldDescription>
+					{/if}
 					<FieldDescription class="text-center">
-						Don't have an account? <a href={resolve('/signup')}>Sign up</a>
+						Don't have an account?
+						<a href={resolve(`/signup?redirectTo=${encodeURIComponent(redirectTo)}` as Pathname)}
+							>Sign up</a
+						>
 					</FieldDescription>
 				</Field>
 			</FieldGroup>
