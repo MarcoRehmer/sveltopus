@@ -11,6 +11,8 @@
 - The project forces Svelte runes mode for application files. For any `.svelte` or `.svelte.ts` change, use the Svelte MCP documentation and run the Svelte autofixer until it is clean.
 - Paraglide messages live in `messages/en.json` and `messages/de.json`; do not edit generated `src/lib/paraglide/`.
 
-## Task Files
+## Validation
 
-- Agent-authored feature tasks live in `tasks/` and follow `tasks/feature-template.md`. Use only `new`, `approved`, `in_progress`, or `rejected` for task status; `rejected` requires a reason.
+- Use Zod for runtime validation of all untrusted input at application boundaries, including form actions, API handlers, and configuration.
+- Keep reusable, client-safe schemas in `src/lib/validation/`, organized by feature. Use `validateFormData` for SvelteKit form actions and return its `fieldErrors` through `fail(400, ...)` for field-level feedback.
+- Infer TypeScript types from schemas when needed. Do not duplicate schema constraints in separate TypeScript interfaces or write ad hoc validation for schema-covered inputs.

@@ -3,6 +3,8 @@ import { APIError } from 'better-auth/api';
 import type { Actions, PageServerLoad } from './$types';
 import { auth } from '$lib/server/auth';
 import { getSafeRedirectPath } from '$lib/server/auth-routing';
+import { signUpSchema } from '$lib/validation/auth';
+import { validateFormData } from '$lib/validation/form';
 
 export const load: PageServerLoad = ({ url }) => ({
 	redirectTo: getSafeRedirectPath(url.searchParams.get('redirectTo'))
@@ -11,17 +13,19 @@ export const load: PageServerLoad = ({ url }) => ({
 export const actions: Actions = {
 	signUpEmail: async (event) => {
 		const formData = await event.request.formData();
-		const name = formData.get('name')?.toString().trim() ?? '';
-		const email = formData.get('email')?.toString().trim() ?? '';
-		const password = formData.get('password')?.toString() ?? '';
-		const confirmPassword = formData.get('confirmPassword')?.toString() ?? '';
+		const validation = validateFormData(signUpSchema, formData);
 		const redirectTo = getSafeRedirectPath(formData.get('redirectTo')?.toString());
 
-		if (password !== confirmPassword) {
-			return fail(400, { message: 'Passwords do not match' });
+		if (!validation.success) {
+			return fail(400, {
+				message: 'Please correct the highlighted fields',
+				fieldErrors: validation.fieldErrors
+			});
 		}
 
 		try {
+			const { name, email, password } = validation.data;
+
 			await auth.api.signUpEmail({
 				body: { name, email, password }
 			});

@@ -12,8 +12,13 @@
 	import type { Pathname } from '$app/types';
 	import { enhance } from '$app/forms';
 
-	let { redirectTo = '/', form }: { redirectTo?: string; form?: { message?: string } | null } =
-		$props();
+	let {
+		redirectTo = '/',
+		form
+	}: {
+		redirectTo?: string;
+		form?: { message?: string; fieldErrors?: Record<string, string[]> } | null;
+	} = $props();
 	const id = $props.id();
 </script>
 
@@ -28,14 +33,36 @@
 			<FieldGroup>
 				<Field>
 					<FieldLabel for="email-{id}">Email</FieldLabel>
-					<Input id="email-{id}" name="email" type="email" placeholder="m@example.com" required />
+					<Input
+						id="email-{id}"
+						name="email"
+						type="email"
+						placeholder="m@example.com"
+						required
+						aria-invalid={Boolean(form?.fieldErrors?.email?.[0])}
+					/>
+					{#if form?.fieldErrors?.email?.[0]}
+						<FieldDescription class="text-destructive">{form.fieldErrors.email[0]}</FieldDescription
+						>
+					{/if}
 				</Field>
 				<Field>
 					<div class="flex items-center">
 						<FieldLabel for="password-{id}">Password</FieldLabel>
 						<a href="##" class="ms-auto inline-block text-sm underline"> Forgot your password? </a>
 					</div>
-					<Input id="password-{id}" name="password" type="password" required />
+					<Input
+						id="password-{id}"
+						name="password"
+						type="password"
+						required
+						aria-invalid={Boolean(form?.fieldErrors?.password?.[0])}
+					/>
+					{#if form?.fieldErrors?.password?.[0]}
+						<FieldDescription class="text-destructive"
+							>{form.fieldErrors.password[0]}</FieldDescription
+						>
+					{/if}
 				</Field>
 				<Field>
 					<Button type="submit" class="w-full">Login</Button>

@@ -3,6 +3,8 @@ import { APIError } from 'better-auth/api';
 import type { Actions, PageServerLoad } from './$types';
 import { auth } from '$lib/server/auth';
 import { getSafeRedirectPath } from '$lib/server/auth-routing';
+import { signInSchema } from '$lib/validation/auth';
+import { validateFormData } from '$lib/validation/form';
 
 export const load: PageServerLoad = ({ url }) => ({
 	redirectTo: getSafeRedirectPath(url.searchParams.get('redirectTo'))
@@ -11,13 +13,19 @@ export const load: PageServerLoad = ({ url }) => ({
 export const actions: Actions = {
 	signInEmail: async (event) => {
 		const formData = await event.request.formData();
-		const email = formData.get('email')?.toString().trim() ?? '';
-		const password = formData.get('password')?.toString() ?? '';
+		const validation = validateFormData(signInSchema, formData);
 		const redirectTo = getSafeRedirectPath(formData.get('redirectTo')?.toString());
+
+		if (!validation.success) {
+			return fail(400, {
+				message: 'Please correct the highlighted fields',
+				fieldErrors: validation.fieldErrors
+			});
+		}
 
 		try {
 			await auth.api.signInEmail({
-				body: { email, password }
+				body: validation.data
 			});
 		} catch (error) {
 			if (error instanceof APIError) {
