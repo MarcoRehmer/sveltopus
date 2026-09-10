@@ -1,7 +1,25 @@
 <script lang="ts">
 	import CheckIcon from '@lucide/svelte/icons/check';
+	import { Badge } from '$lib/components/ui/badge';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
+	import * as Table from '$lib/components/ui/table';
+
+	const freeFeatures = ['feature 1', 'feature 2', 'feature 3'];
+	const proFeatures = [
+		...freeFeatures,
+		'Everything in Free, plus:',
+		'feature 5',
+		'feature 6',
+		'feature 7'
+	];
+	const enterpriseFeatures = [...proFeatures, 'feature 8', 'feature 9', 'feature 10'];
+
+	const featurePlan: Record<string, string[]> = {
+		Free: freeFeatures,
+		Pro: proFeatures,
+		Enterprise: enterpriseFeatures
+	};
 
 	const plans = [
 		{
@@ -9,7 +27,7 @@
 			description: 'A simple starting point for your account.',
 			price: '0€',
 			priceSuffix: 'forever',
-			features: ['feature 1', 'feature 2', 'feature 3'],
+			features: featurePlan.Free,
 			current: true,
 			badge: ''
 		},
@@ -18,7 +36,7 @@
 			description: 'More capability for growing teams.',
 			price: '39,99€',
 			priceSuffix: 'per month',
-			features: ['Everything in Free, plus:', 'feature 5', 'feature 6', 'feature 7'],
+			features: featurePlan.Pro,
 			current: false,
 			badge: 'Most loved'
 		},
@@ -27,11 +45,13 @@
 			description: 'Flexible support for larger organizations.',
 			price: '',
 			priceSuffix: '',
-			features: ['feature 8', 'feature 9', 'feature 10'],
+			features: featurePlan.Enterprise,
 			current: false,
 			badge: ''
 		}
 	];
+
+	const comparisonFeatures = [...new Set(Object.values(featurePlan).flat())];
 </script>
 
 <svelte:head>
@@ -56,11 +76,9 @@
 				]}
 			>
 				{#if plan.badge}
-					<div
-						class="absolute end-5 top-5 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground"
-					>
+					<Badge class="absolute end-5 top-5">
 						{plan.badge}
-					</div>
+					</Badge>
 				{/if}
 
 				<Card.Header class="min-h-36">
@@ -121,4 +139,76 @@
 			</Card.Root>
 		{/each}
 	</div>
+
+	<section class="flex flex-col gap-4">
+		<div>
+			<h2 class="text-2xl font-semibold tracking-tight">Feature comparison</h2>
+			<p class="mt-2 text-muted-foreground">Compare the features included with each plan.</p>
+		</div>
+
+		<div class="hidden overflow-hidden rounded-lg border md:block">
+			<Table.Root>
+				<Table.Header>
+					<Table.Row>
+						<Table.Head class="w-1/2">Feature</Table.Head>
+						{#each plans as plan (plan.name)}
+							<Table.Head class="text-center">{plan.name}</Table.Head>
+						{/each}
+					</Table.Row>
+				</Table.Header>
+				<Table.Body>
+					{#each comparisonFeatures as feature (feature)}
+						<Table.Row>
+							<Table.Cell class="font-medium">{feature}</Table.Cell>
+							{#each plans as plan (plan.name)}
+								<Table.Cell class="text-center">
+									{#if plan.features.includes(feature)}
+										<CheckIcon
+											class="mx-auto size-4 text-primary"
+											aria-label={`${plan.name} includes ${feature}`}
+										/>
+									{:else}
+										<span
+											class="text-muted-foreground"
+											aria-label={`${plan.name} does not include ${feature}`}
+										>
+											&mdash;
+										</span>
+									{/if}
+								</Table.Cell>
+							{/each}
+						</Table.Row>
+					{/each}
+				</Table.Body>
+			</Table.Root>
+		</div>
+
+		<div class="grid gap-3 md:hidden">
+			{#each comparisonFeatures as feature (feature)}
+				<div class="rounded-lg border p-4">
+					<h3 class="font-medium">{feature}</h3>
+					<div class="mt-3 grid gap-2">
+						{#each plans as plan (plan.name)}
+							<div class="flex items-center justify-between text-sm">
+								<span class="text-muted-foreground">{plan.name}</span>
+								{#if plan.features.includes(feature)}
+									<CheckIcon
+										class="size-4 text-primary"
+										aria-label={`${plan.name} includes ${feature}`}
+									/>
+								{:else}
+									<span
+										class="text-muted-foreground"
+										aria-label={`${plan.name} does not include ${feature}`}
+									>
+										&mdash;
+									</span>
+								{/if}
+							</div>
+						{/each}
+					</div>
+				</div>
+			{/each}
+		</div>
+	</section>
 </div>
