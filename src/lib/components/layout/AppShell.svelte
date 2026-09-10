@@ -1,19 +1,27 @@
 <script lang="ts">
-
-
 	import * as Sidebar from '$lib/components/ui/sidebar';
 	import type { Snippet } from 'svelte';
 	import AppSidebar from '../app-sidebar.svelte';
-	import * as Breadcrumb   from '../ui/breadcrumb';
+	import * as Breadcrumb from '../ui/breadcrumb';
 	import Separator from '../ui/separator/separator.svelte';
-	
-	
 
-	let { children }: { children: Snippet } = $props();
+	type SidebarUser = {
+		name: string;
+		email: string;
+		image?: string | null;
+	};
+
+	let {
+		children,
+		user
+	}: {
+		children: Snippet;
+		user: SidebarUser | undefined;
+	} = $props();
 </script>
 
 <Sidebar.Provider>
-	<AppSidebar />
+	<AppSidebar {user} />
 	<Sidebar.Inset>
 		<header
 			class="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12"
@@ -34,7 +42,7 @@
 				</Breadcrumb.Root>
 			</div>
 		</header>
-		<div class="flex flex-1 flex-col gap-4 p-4 pt-0 ">
+		<div class="flex flex-1 flex-col gap-4 p-4 pt-0">
 			{@render children()}
 		</div>
 	</Sidebar.Inset>

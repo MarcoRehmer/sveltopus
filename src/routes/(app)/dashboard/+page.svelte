@@ -1,4 +1,3 @@
-
 <svelte:head>
 	<title>Dashboard | Sveltopus</title>
 </svelte:head>

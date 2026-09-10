@@ -6,12 +6,9 @@ import type { Handle } from '@sveltejs/kit';
 import { getTextDirection } from '$lib/paraglide/runtime';
 import { paraglideMiddleware } from '$lib/paraglide/server';
 
-
 const handleParaglide: Handle = ({ event, resolve }) =>
 	paraglideMiddleware(event.request, async ({ request, locale }) => {
 		event.request = request;
-
-		
 
 		const response = await resolve(event, {
 			transformPageChunk: ({ html }) =>
