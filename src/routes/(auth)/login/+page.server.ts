@@ -37,5 +37,27 @@ export const actions: Actions = {
 		}
 
 		throw redirect(303, redirectTo);
+	},
+	signInGoogle: async (event) => {
+		const redirectTo = getSafeRedirectPath(
+			(event.request.url.searchParams.get('redirectTo') || event.url.searchParams.get('redirectTo'))?.toString()
+		);
+
+		try {
+			await auth.api.signInSocial({
+				body: {
+					provider: 'google',
+					callbackURL: redirectTo
+				}
+			});
+		} catch (error) {
+			if (error instanceof APIError) {
+				return fail(400, { message: error.message || 'Google sign in failed' });
+			}
+
+			return fail(500, { message: 'Unexpected error while signing in with Google' });
+		}
+
+		throw redirect(303, redirectTo);
 	}
 };
