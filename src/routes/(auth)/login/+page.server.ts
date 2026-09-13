@@ -13,7 +13,7 @@ export const load: PageServerLoad = ({ url }) => ({
 export const actions: Actions = {
 	signInEmail: async (event) => {
 		const formData = await event.request.formData();
-		
+
 		const validation = validateFormData(signInSchema, formData);
 		const redirectTo = getSafeRedirectPath(formData.get('redirectTo')?.toString());
 

@@ -1,5 +1,6 @@
 import type { EmailMessage, EmailTransport } from '$lib/server/email/transport';
 import { EmailSendError } from '$lib/server/email/errors';
+import { env } from '$env/dynamic/private';
 
 /**
  * Scaleway-specific configuration.
@@ -111,18 +112,16 @@ class ScalewayTransport implements EmailTransport {
  * @throws {EmailSendError} if configuration is missing or invalid
  */
 export function createScalewayTransport(sender: { name: string; email: string }): EmailTransport {
-	const config = {
-		projectId: process.env.EMAIL_SCW_PROJECT_ID!,
-		apiToken: process.env.EMAIL_SCW_API_TOKEN!,
-		region: process.env.EMAIL_SCW_REGION || 'fr-par'
-	};
+	const projectId = env.EMAIL_SCW_PROJECT_ID;
+	const apiToken = env.EMAIL_SCW_API_TOKEN;
+	const region = env.EMAIL_SCW_REGION || 'fr-par';
 
-	if (!config.projectId || !config.apiToken) {
+	if (!projectId || !apiToken) {
 		throw new EmailSendError(
 			'Scaleway configuration missing: EMAIL_SCW_PROJECT_ID and EMAIL_SCW_API_TOKEN are required',
 			'scaleway'
 		);
 	}
 
-	return new ScalewayTransport(config, sender);
+	return new ScalewayTransport({ projectId, apiToken, region }, sender);
 }

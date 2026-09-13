@@ -1,5 +1,6 @@
 import type { EmailMessage, EmailTransport } from '$lib/server/email/transport';
 import { EmailSendError } from '$lib/server/email/errors';
+import { env } from '$env/dynamic/private';
 
 /**
  * Brevo-specific configuration.
@@ -43,16 +44,14 @@ class BrevoTransport implements EmailTransport {
  * @throws {EmailSendError} if configuration is missing or invalid
  */
 export function createBrevoTransport(sender: { name: string; email: string }): EmailTransport {
-	const config = {
-		apiKey: process.env.EMAIL_BREVO_API_KEY!
-	};
+	const apiKey = env.EMAIL_BREVO_API_KEY;
 
-	if (!config.apiKey) {
+	if (!apiKey) {
 		throw new EmailSendError(
 			'Brevo configuration missing: EMAIL_BREVO_API_KEY is required',
 			'brevo'
 		);
 	}
 
-	return new BrevoTransport(config, sender);
+	return new BrevoTransport({ apiKey }, sender);
 }

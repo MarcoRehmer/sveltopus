@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { env } from '$env/dynamic/private';
 
 /**
  * Environment variable schema for global email configuration.
@@ -20,17 +21,17 @@ export type EmailConfig = z.infer<typeof emailConfigSchema>;
 
 /**
  * Validate global email configuration from environment variables.
- * @param env - Environment variables to validate (defaults to process.env)
+ * @param customEnv - Environment variables to validate (defaults to $env/dynamic/private)
  * @returns Validated email configuration
  * @throws {Error} if configuration is invalid or missing
  */
 export function validateEmailConfig(
-	env: Record<string, string | undefined> = process.env
+	customEnv: Record<string, string | undefined> = env
 ): EmailConfig {
 	const result = emailConfigSchema.safeParse({
-		EMAIL_PROVIDER: env.EMAIL_PROVIDER,
-		EMAIL_SENDER_NAME: env.EMAIL_SENDER_NAME,
-		EMAIL_SENDER_EMAIL: env.EMAIL_SENDER_EMAIL
+		EMAIL_PROVIDER: customEnv.EMAIL_PROVIDER,
+		EMAIL_SENDER_NAME: customEnv.EMAIL_SENDER_NAME,
+		EMAIL_SENDER_EMAIL: customEnv.EMAIL_SENDER_EMAIL
 	});
 
 	if (!result.success) {
