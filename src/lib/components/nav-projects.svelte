@@ -29,10 +29,10 @@
 			<Sidebar.MenuItem>
 				<Sidebar.MenuButton>
 					{#snippet child({ props })}
-						<a href={item.url} {...props}>
-							<item.icon />
-							<span>{item.name}</span>
-						</a>
+					<a href={item.url} {...props} use:resolve>
+						<item.icon />
+						<span>{item.name}</span>
+					</a>
 					{/snippet}
 				</Sidebar.MenuButton>
 				<DropdownMenu.Root>

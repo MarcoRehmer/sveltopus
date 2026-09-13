@@ -69,6 +69,7 @@
 		aria-disabled={disabled}
 		role={disabled ? 'link' : undefined}
 		tabindex={disabled ? -1 : undefined}
+		use:resolve
 		{...restProps}
 	>
 		{@render children?.()}

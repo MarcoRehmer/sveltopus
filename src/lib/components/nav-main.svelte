@@ -47,9 +47,9 @@
 									<Sidebar.MenuSubItem>
 										<Sidebar.MenuSubButton>
 											{#snippet child({ props })}
-												<a href={subItem.url} {...props}>
-													<span>{subItem.title}</span>
-												</a>
+								<a href={subItem.url} {...props} use:resolve>
+									<span>{subItem.title}</span>
+								</a>
 											{/snippet}
 										</Sidebar.MenuSubButton>
 									</Sidebar.MenuSubItem>
