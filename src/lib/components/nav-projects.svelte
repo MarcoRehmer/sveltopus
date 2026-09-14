@@ -1,4 +1,5 @@
 <script lang="ts">
+	/* eslint-disable svelte/no-navigation-without-resolve */
 	import EllipsisIcon from '@lucide/svelte/icons/ellipsis';
 	import FolderIcon from '@lucide/svelte/icons/folder';
 	import ForwardIcon from '@lucide/svelte/icons/forward';
@@ -29,10 +30,10 @@
 			<Sidebar.MenuItem>
 				<Sidebar.MenuButton>
 					{#snippet child({ props })}
-					<a href={item.url} {...props} use:resolve>
-						<item.icon />
-						<span>{item.name}</span>
-					</a>
+						<a href={item.url} {...props} use:resolve>
+							<item.icon />
+							<span>{item.name}</span>
+						</a>
 					{/snippet}
 				</Sidebar.MenuButton>
 				<DropdownMenu.Root>

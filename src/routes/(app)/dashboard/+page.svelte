@@ -1,8 +1,20 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { Button } from '$lib/components/ui/button';
+	import { toast } from 'svelte-sonner';
 
 	let isSending = $state(false);
 	let emailStatus = $state<string | null>(null);
+
+	function testNotifications() {
+		toast.success('Success!', { description: 'This is a success notification.' });
+		toast.error('Error!', {
+			description: 'This error persists until dismissed.',
+			duration: Number.POSITIVE_INFINITY
+		});
+		toast.warning('Warning!', { description: 'This is a warning notification.' });
+		toast.info('Info!', { description: 'This is an info notification.' });
+	}
 </script>
 
 <svelte:head>
@@ -14,6 +26,7 @@
 	<p class="text-muted-foreground">The Dashboard feature is not implemented yet.</p>
 
 	<div class="mt-6">
+		<Button variant="secondary" class="mb-4" onclick={testNotifications}>Test Notifications</Button>
 		<form
 			method="POST"
 			action="?/sendWelcomeEmail"

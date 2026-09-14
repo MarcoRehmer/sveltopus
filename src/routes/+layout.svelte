@@ -3,6 +3,8 @@
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { locales, localizeHref } from '$lib/paraglide/runtime';
+	import { Toaster } from '$lib/components/ui/sonner';
+	import { ModeWatcher } from 'mode-watcher';
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
 
@@ -10,6 +12,8 @@
 </script>
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
+<ModeWatcher />
+<Toaster position="top-right" closeButton visibleToasts={3} />
 {@render children()}
 
 <div style="display:none">
