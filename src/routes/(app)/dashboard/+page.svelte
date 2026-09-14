@@ -2,31 +2,34 @@
 	import { enhance } from '$app/forms';
 	import { Button } from '$lib/components/ui/button';
 	import { toast } from 'svelte-sonner';
+	import { m } from '$lib/paraglide/messages';
 
 	let isSending = $state(false);
 	let emailStatus = $state<string | null>(null);
 
 	function testNotifications() {
-		toast.success('Success!', { description: 'This is a success notification.' });
-		toast.error('Error!', {
-			description: 'This error persists until dismissed.',
+		toast.success(m.notification_success_title(), { description: m.notification_success_description() });
+		toast.error(m.notification_error_title(), {
+			description: m.notification_error_description(),
 			duration: Number.POSITIVE_INFINITY
 		});
-		toast.warning('Warning!', { description: 'This is a warning notification.' });
-		toast.info('Info!', { description: 'This is an info notification.' });
+		toast.warning(m.notification_warning_title(), { description: m.notification_warning_description() });
+		toast.info(m.notification_info_title(), { description: m.notification_info_description() });
 	}
 </script>
 
 <svelte:head>
-	<title>Dashboard | Sveltopus</title>
+	<title>{m.dashboard_title()} | Sveltopus</title>
 </svelte:head>
 
 <div class="flex flex-col gap-4">
-	<h1 class="text-3xl font-semibold tracking-tight">Dashboard</h1>
-	<p class="text-muted-foreground">The Dashboard feature is not implemented yet.</p>
+	<h1 class="text-3xl font-semibold tracking-tight">{m.dashboard_title()}</h1>
+	<p class="text-muted-foreground">{m.dashboard_description()}</p>
 
 	<div class="mt-6">
-		<Button variant="secondary" class="mb-4" onclick={testNotifications}>Test Notifications</Button>
+		<Button variant="secondary" class="mb-4" onclick={testNotifications}>
+			{m.send_welcome_email_button()}
+		</Button>
 		<form
 			method="POST"
 			action="?/sendWelcomeEmail"
@@ -34,13 +37,10 @@
 				isSending = true;
 				return async ({ result }) => {
 					isSending = false;
-					console.log('result:', result);
 					if (result.type === 'success') {
 						emailStatus = 'success';
-						console.log('Welcome email sent successfully! Message ID:', result.data?.messageId);
 					} else if (result.type === 'failure') {
 						emailStatus = 'error';
-						console.error('Failed to send welcome email');
 					}
 				};
 			}}
@@ -72,19 +72,19 @@
 								d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
 							></path>
 						</svg>
-						Sending Welcome Email...
-					</span>
-				{:else}
-					Send Welcome Email
-				{/if}
-			</button>
-		</form>
-		{#if emailStatus === 'success'}
-			<p class="mt-2 text-sm text-green-600">✓ Welcome email sent successfully!</p>
-		{:else if emailStatus === 'error'}
-			<p class="mt-2 text-sm text-red-600">
-				✗ Failed to send welcome email. Check console for details.
-			</p>
-		{/if}
+							{m.sending_welcome_email()}
+						</span>
+					{:else}
+						{m.send_welcome_email_button()}
+					{/if}
+				</button>
+			</form>
+			{#if emailStatus === 'success'}
+				<p class="mt-2 text-sm text-green-600">{m.email_sent_success()}</p>
+			{:else if emailStatus === 'error'}
+				<p class="mt-2 text-sm text-red-600">
+					{m.email_sent_error()}
+				</p>
+			{/if}
 	</div>
-</div>
+	</div>
