@@ -1,7 +1,10 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
+	import * as Field from '$lib/components/ui/field';
 	import { Input } from '$lib/components/ui/input';
+	import * as RadioGroup from '$lib/components/ui/radio-group';
+	import { setMode, userPrefersMode } from 'mode-watcher';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
@@ -58,6 +61,51 @@
 					<p class="text-muted-foreground">0€</p>
 				</div>
 				<Button href="/account/subscriptions" variant="outline">View subscriptions</Button>
+			</Card.Content>
+		</Card.Root>
+
+		<Card.Root>
+			<Card.Header>
+				<Card.Title>Appearance</Card.Title>
+				<Card.Description>Choose how Sveltopus should look on this device.</Card.Description>
+			</Card.Header>
+			<Card.Content>
+				<Field.FieldSet>
+					<Field.FieldLegend variant="label">Theme</Field.FieldLegend>
+					<RadioGroup.Root value={userPrefersMode.current} aria-label="Theme">
+						<Field.Field orientation="horizontal">
+							<RadioGroup.Item
+								id="appearance-light"
+								value="light"
+								onclick={() => setMode('light')}
+							/>
+							<Field.FieldContent>
+								<Field.FieldLabel for="appearance-light">Light</Field.FieldLabel>
+								<Field.FieldDescription>Use a light color scheme.</Field.FieldDescription>
+							</Field.FieldContent>
+						</Field.Field>
+
+						<Field.Field orientation="horizontal">
+							<RadioGroup.Item id="appearance-dark" value="dark" onclick={() => setMode('dark')} />
+							<Field.FieldContent>
+								<Field.FieldLabel for="appearance-dark">Dark</Field.FieldLabel>
+								<Field.FieldDescription>Use a dark color scheme.</Field.FieldDescription>
+							</Field.FieldContent>
+						</Field.Field>
+
+						<Field.Field orientation="horizontal">
+							<RadioGroup.Item
+								id="appearance-system"
+								value="system"
+								onclick={() => setMode('system')}
+							/>
+							<Field.FieldContent>
+								<Field.FieldLabel for="appearance-system">System</Field.FieldLabel>
+								<Field.FieldDescription>Follow your device preference.</Field.FieldDescription>
+							</Field.FieldContent>
+						</Field.Field>
+					</RadioGroup.Root>
+				</Field.FieldSet>
 			</Card.Content>
 		</Card.Root>
 	</div>
