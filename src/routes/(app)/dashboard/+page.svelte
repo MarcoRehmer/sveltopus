@@ -1,21 +1,11 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { Button } from '$lib/components/ui/button';
-	import { toast } from 'svelte-sonner';
+	
 	import { m } from '$lib/paraglide/messages';
 
 	let isSending = $state(false);
 	let emailStatus = $state<string | null>(null);
-
-	function testNotifications() {
-		toast.success(m.notification_success_title(), { description: m.notification_success_description() });
-		toast.error(m.notification_error_title(), {
-			description: m.notification_error_description(),
-			duration: Number.POSITIVE_INFINITY
-		});
-		toast.warning(m.notification_warning_title(), { description: m.notification_warning_description() });
-		toast.info(m.notification_info_title(), { description: m.notification_info_description() });
-	}
 </script>
 
 <svelte:head>
@@ -27,9 +17,6 @@
 	<p class="text-muted-foreground">{m.dashboard_description()}</p>
 
 	<div class="mt-6">
-		<Button variant="secondary" class="mb-4" onclick={testNotifications}>
-			{m.send_welcome_email_button()}
-		</Button>
 		<form
 			method="POST"
 			action="?/sendWelcomeEmail"
@@ -45,7 +32,7 @@
 				};
 			}}
 		>
-			<button
+			<Button
 				type="submit"
 				disabled={isSending}
 				class="inline-flex h-10 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
@@ -77,7 +64,7 @@
 					{:else}
 						{m.send_welcome_email_button()}
 					{/if}
-				</button>
+					</Button>
 			</form>
 			{#if emailStatus === 'success'}
 				<p class="mt-2 text-sm text-green-600">{m.email_sent_success()}</p>

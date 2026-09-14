@@ -141,6 +141,14 @@ Use shadcn-svelte components when an appropriate existing component exists.
 Do not create a custom component when an existing shadcn-svelte component
 already provides the required behavior unless there is a concrete reason.
 
+## Error Handling
+
+- Global server errors: caught in `src/hooks.server.ts` via `handleErrors` handler.
+- Use `AppError` class from `src/lib/server/errors.ts` for typed errors with status codes.
+- Use `handleError()` from `src/lib/server/errors.ts` to normalize errors and get environment-aware messages.
+- Client errors: displayed in DEV only via error state in `src/routes/+layout.svelte`.
+- PROD: never show technical errors in UI, only generic messages.
+
 ## Database
 
 Use Drizzle ORM and the existing database conventions.

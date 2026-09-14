@@ -6,6 +6,7 @@ import type { Handle } from '@sveltejs/kit';
 import { getTextDirection } from '$lib/paraglide/runtime';
 import { paraglideMiddleware } from '$lib/paraglide/server';
 import { validateConfig } from '$lib/server/config';
+import { handleError } from '$lib/server/errors';
 
 const handleConfig: Handle = ({ event, resolve }) => {
 	validateConfig();
@@ -29,4 +30,14 @@ const handleBetterAuth: Handle = async ({ event, resolve }) => {
 	return svelteKitHandler({ event, resolve, auth, building });
 };
 
-export const handle: Handle = sequence(handleConfig, handleParaglide, handleBetterAuth);
+const handleErrors: Handle = async ({ event, resolve }) => {
+	try {
+		return await resolve(event);
+	} catch (error) {
+		const { status, message } = handleError(error);
+		console.error('Global error handler caught:', error);
+		return new Response(message, { status });
+	}
+};
+
+export const handle: Handle = sequence(handleConfig, handleParaglide, handleBetterAuth, handleErrors);
