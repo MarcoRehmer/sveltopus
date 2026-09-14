@@ -18,11 +18,25 @@
 - Put reusable client-safe Zod schemas in `src/lib/validation/`. For SvelteKit form actions, use `validateFormData` and return its `fieldErrors` in `fail(400, ...)`.
 - Infer types from schemas instead of duplicating schema constraints in TypeScript interfaces.
 
+## Configuration
+
+- Keep server-only configuration under `src/lib/server/config/`; use `$env/dynamic/private` only there.
+- Validate critical configuration such as the database and authentication settings centrally. Critical validation errors must fail the application.
+- Treat optional configuration such as email providers as unavailable when invalid, log a warning to the server console, and expose it as `undefined` rather than using invalid values.
+- Config-first rule: the configuration module must only define and validate environment data. It must never import application modules, providers, or service instances.
+- Use the factory pattern: application modules create their own instances from validated configuration values. Pass provider-specific configuration into factories instead of having factories read environment variables.
+
+### Configuration Safety Steps
+
+1. Keep configuration schemas as pure data definitions with no business-logic imports.
+2. Keep instance creation in application modules and pass validated configuration into their factories.
+
 ## Scope
 
-Implement only what the task requires. 
+Implement only what the task requires.
 
 Do not:
+
 - add tests unless requested
 - refactor unrelated code
 - introduce new dependencies without necessity
@@ -39,6 +53,7 @@ Prefer the smallest change that correctly solves the problem.
 Reuse existing patterns before introducing new ones.
 
 Do not:
+
 - introduce abstractions for a single use case
 - optimize prematurely
 - implement code documentation on your own (only if instructed)
@@ -59,6 +74,7 @@ Prefer the smallest implementation that correctly satisfies the task.
 ## Verification
 
 After implementation:
+
 1. Check the changed code.
 2. Run the smallest relevant verification.
 3. Do not automatically create new tests.
@@ -72,6 +88,7 @@ Prefer focused verification over running every available check.
 ## Unrelated Issues
 
 If you notice unrelated bugs or technical debt:
+
 - do not fix them
 - mention them in the final response under "Out of scope"
 

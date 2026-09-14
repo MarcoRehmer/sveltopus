@@ -1,7 +1,9 @@
-import { validateEmailConfig } from './config';
-import { providers } from './providers';
 import type { EmailMessage, EmailTransport } from './transport';
 import { EmailSendError } from './errors';
+import { getConfig } from '$lib/server/config';
+import { createScalewayTransport } from './providers/scaleway';
+import { createBrevoTransport } from './providers/brevo';
+import { createConsoleTransport } from './providers/console';
 
 // Global singleton for the transport instance
 let transport: EmailTransport | null = null;
@@ -10,24 +12,31 @@ let transport: EmailTransport | null = null;
  * Create an email transport instance based on the configured provider.
  * Validates global configuration and creates the appropriate transport.
  * @returns EmailTransport instance
- * @throws {EmailSendError} if configuration is invalid or provider is unsupported
+ * @throws {EmailSendError} if email configuration is unavailable
  */
 function createTransport(): EmailTransport {
-	const config = validateEmailConfig();
-	const sender = {
-		name: config.EMAIL_SENDER_NAME,
-		email: config.EMAIL_SENDER_EMAIL
-	};
-
-	const providerFactory = providers[config.EMAIL_PROVIDER];
-	if (!providerFactory) {
-		throw new EmailSendError(
-			`Unsupported email provider: ${config.EMAIL_PROVIDER}`,
-			config.EMAIL_PROVIDER
-		);
+	const email = getConfig().email;
+	if (!email) {
+		throw new EmailSendError('Email configuration is unavailable', 'email');
 	}
 
-	return providerFactory(sender);
+	const sender = {
+		name: email.EMAIL_SENDER_NAME,
+		email: email.EMAIL_SENDER_EMAIL
+	};
+
+	switch (email.EMAIL_PROVIDER) {
+		case 'scaleway':
+			return createScalewayTransport(sender, {
+				projectId: email.EMAIL_SCW_PROJECT_ID!,
+				apiToken: email.EMAIL_SCW_API_TOKEN!,
+				region: email.EMAIL_SCW_REGION
+			});
+		case 'brevo':
+			return createBrevoTransport(sender, { apiKey: email.EMAIL_BREVO_API_KEY! });
+		case 'console':
+			return createConsoleTransport(sender);
+	}
 }
 
 /**
