@@ -7,6 +7,7 @@ import { getTextDirection } from '$lib/paraglide/runtime';
 import { paraglideMiddleware } from '$lib/paraglide/server';
 import { validateConfig } from '$lib/server/config';
 import { handleError } from '$lib/server/errors';
+import { getDefaultOrganizationId } from '$lib/server/tenancy';
 
 const handleConfig: Handle = ({ event, resolve }) => {
 	validateConfig();
@@ -25,6 +26,7 @@ const handleBetterAuth: Handle = async ({ event, resolve }) => {
 	if (session) {
 		event.locals.session = session.session;
 		event.locals.user = session.user;
+		event.locals.organizationId = await getDefaultOrganizationId(session.user.id);
 	}
 
 	return svelteKitHandler({ event, resolve, auth, building });
@@ -40,4 +42,9 @@ const handleErrors: Handle = async ({ event, resolve }) => {
 	}
 };
 
-export const handle: Handle = sequence(handleConfig, handleParaglide, handleBetterAuth, handleErrors);
+export const handle: Handle = sequence(
+	handleConfig,
+	handleParaglide,
+	handleBetterAuth,
+	handleErrors
+);

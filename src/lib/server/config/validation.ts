@@ -18,7 +18,10 @@ export function validateConfig(): AppConfig {
 	if (validatedConfig) return validatedConfig;
 	if (validationError) throw validationError;
 
-	const database = databaseConfigSchema.safeParse({ DATABASE_URL: env.DATABASE_URL });
+	const database = databaseConfigSchema.safeParse({
+		DATABASE_URL: env.DATABASE_URL,
+		ADMIN_DATABASE_URL: env.ADMIN_DATABASE_URL || undefined
+	});
 	const auth = authConfigSchema.safeParse({
 		ORIGIN: env.ORIGIN,
 		BETTER_AUTH_SECRET: env.BETTER_AUTH_SECRET

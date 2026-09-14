@@ -24,5 +24,9 @@ export const load: LayoutServerLoad = ({ locals, url }) => {
 		throw redirect(303, `/login?redirectTo=${redirectTo}`);
 	}
 
-	return { user: locals.user, session: locals.session };
+	return {
+		user: locals.user,
+		session: locals.session,
+		organizationId: locals.organizationId
+	};
 };

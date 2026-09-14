@@ -4,7 +4,8 @@ export const databaseConfigSchema = z.object({
 	DATABASE_URL: z
 		.string()
 		.min(1, 'DATABASE_URL is required')
-		.url('DATABASE_URL must be a valid URL')
+		.url('DATABASE_URL must be a valid URL'),
+	ADMIN_DATABASE_URL: z.string().url('ADMIN_DATABASE_URL must be a valid URL').optional()
 });
 
 export const authConfigSchema = z.object({
