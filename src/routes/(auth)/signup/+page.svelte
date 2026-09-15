@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { resolve } from '$app/paths';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
@@ -19,7 +20,7 @@
 	<div class="flex flex-col space-y-2 text-center">
 		<h1 class="text-2xl font-semibold tracking-tight">{m.signup_title()}</h1>
 		<p class="text-sm text-muted-foreground">
-			{m.signup_already_have_account()} <a href="/login" class="underline underline-offset-4 hover:text-primary">{m.signup_login_link()}</a>
+			{m.signup_already_have_account()} <a href={resolve('/login')} class="underline underline-offset-4 hover:text-primary">{m.signup_login_link()}</a>
 		</p>
 	</div>
 	<div class="grid gap-6">
@@ -70,19 +71,19 @@
 			<div class="absolute inset-0 flex items-center">
 				<span class="w-full border-t"></span>
 			</div>
-			<div class="relative flex justify-center text-xs uppercase">
+			<!-- <div class="relative flex justify-center text-xs uppercase">
 				<span class="bg-background px-2 text-muted-foreground">
 					Or continue with
 				</span>
-			</div>
+			</div> -->
 		</div>
-		<div class="grid grid-cols-2 gap-4">
+		<!-- <div class="grid grid-cols-2 gap-4">
 			<Button variant="outline" type="button" disabled={isLoading}>
 				{m.login_google_button()}
 			</Button>
 			<Button variant="outline" type="button" disabled={isLoading}>
 				{m.login_github_button()}
 			</Button>
-		</div>
+		</div> -->
 	</div>
 </div>
