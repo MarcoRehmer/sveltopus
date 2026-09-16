@@ -1,17 +1,20 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { Button } from '$lib/components/ui/button';
+	
+	import { m } from '$lib/paraglide/messages';
 
 	let isSending = $state(false);
 	let emailStatus = $state<string | null>(null);
 </script>
 
 <svelte:head>
-	<title>Dashboard | Sveltopus</title>
+	<title>{m.dashboard_title()} | Sveltopus</title>
 </svelte:head>
 
 <div class="flex flex-col gap-4">
-	<h1 class="text-3xl font-semibold tracking-tight">Dashboard</h1>
-	<p class="text-muted-foreground">The Dashboard feature is not implemented yet.</p>
+	<h1 class="text-3xl font-semibold tracking-tight">{m.dashboard_title()}</h1>
+	<p class="text-muted-foreground">{m.dashboard_description()}</p>
 
 	<div class="mt-6">
 		<form
@@ -21,18 +24,15 @@
 				isSending = true;
 				return async ({ result }) => {
 					isSending = false;
-					console.log('result:', result);
 					if (result.type === 'success') {
 						emailStatus = 'success';
-						console.log('Welcome email sent successfully! Message ID:', result.data?.messageId);
 					} else if (result.type === 'failure') {
 						emailStatus = 'error';
-						console.error('Failed to send welcome email');
 					}
 				};
 			}}
 		>
-			<button
+			<Button
 				type="submit"
 				disabled={isSending}
 				class="inline-flex h-10 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
@@ -59,19 +59,19 @@
 								d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
 							></path>
 						</svg>
-						Sending Welcome Email...
-					</span>
-				{:else}
-					Send Welcome Email
-				{/if}
-			</button>
-		</form>
-		{#if emailStatus === 'success'}
-			<p class="mt-2 text-sm text-green-600">✓ Welcome email sent successfully!</p>
-		{:else if emailStatus === 'error'}
-			<p class="mt-2 text-sm text-red-600">
-				✗ Failed to send welcome email. Check console for details.
-			</p>
-		{/if}
+							{m.sending_welcome_email()}
+						</span>
+					{:else}
+						{m.send_welcome_email_button()}
+					{/if}
+					</Button>
+			</form>
+			{#if emailStatus === 'success'}
+				<p class="mt-2 text-sm text-green-600">{m.email_sent_success()}</p>
+			{:else if emailStatus === 'error'}
+				<p class="mt-2 text-sm text-red-600">
+					{m.email_sent_error()}
+				</p>
+			{/if}
 	</div>
-</div>
+	</div>

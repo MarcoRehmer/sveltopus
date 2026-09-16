@@ -1,0 +1,1 @@
+ALTER TABLE "admin_audit_event" ALTER COLUMN "reason" SET NOT NULL;

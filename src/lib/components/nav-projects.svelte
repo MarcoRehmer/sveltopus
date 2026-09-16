@@ -1,4 +1,5 @@
 <script lang="ts">
+	/* eslint-disable svelte/no-navigation-without-resolve */
 	import EllipsisIcon from '@lucide/svelte/icons/ellipsis';
 	import FolderIcon from '@lucide/svelte/icons/folder';
 	import ForwardIcon from '@lucide/svelte/icons/forward';

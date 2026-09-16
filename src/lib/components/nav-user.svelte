@@ -11,8 +11,11 @@
 	import { useSidebar } from '$lib/components/ui/sidebar/index.js';
 	import { resolve } from '$app/paths';
 
-	let { user }: { user: { name: string; email: string; avatar: string } } = $props();
+
+	let { user, onlogout }: { user: { name: string; email: string; avatar: string,  }, onlogout?: () => void } = $props();
 	const sidebar = useSidebar();
+
+	
 </script>
 
 <Sidebar.Menu>
@@ -86,8 +89,10 @@
 					</DropdownMenu.Item>
 				</DropdownMenu.Group>
 				<DropdownMenu.Separator />
-				<DropdownMenu.Item>
-					<LogOutIcon />
+				<DropdownMenu.Item onSelect={() => onlogout && onlogout()}>
+					
+						<LogOutIcon />
+					
 					Log out
 				</DropdownMenu.Item>
 			</DropdownMenu.Content>
